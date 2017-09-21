@@ -14,6 +14,7 @@ function matchSegment(seg1, seg2, r, result) {
     var ap = closePoint(a, c, d, r),
         bp = closePoint(b, c, d, r);
 
+        console.log(ap, bp);
     //     a----b
     // c---ap---bp---d
     if (ap !== null && bp !== null) return true; // fully covered

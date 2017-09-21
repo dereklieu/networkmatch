@@ -3,48 +3,47 @@
 var rbush = require('rbush');
 var matchSegment = require('./segment');
 
-module.exports = linematch;
+module.exports.index = index;
+module.exports.clearIndex = clearIndex;
+module.exports.match = match;
 
-function linematch(lines1, lines2, threshold) {
-    var segments = linesToSegments(lines1),
-        tree = indexLines(lines2),
-        diff = [],
-        last;
+var tree;
+function index(featureCollection) {
+    tree = indexFeatures(featureCollection.features);
+}
+
+function clearIndex() {
+    tree = null;
+}
+
+function match(feature, threshold) {
+    if (!tree) {
+        throw new Error('You must call index() first');
+    }
+
+    var segments = [],
+        matches = [];
+
+    featureToSegments(feature, segments);
 
     while (segments.length) {
-        var seg = segments.pop(),
-            other = tree.search(segmentBBox(seg, threshold)),
-            overlap = false;
+        var seg = segments.pop();
+        var other = tree.search(segmentBBox(seg, threshold));
 
-        // loop through segments close to the current one, looking for matches;
-        // if a match found, unmatched parts of the segment will be added to the queue
         for (var j = 0; j < other.length; j++) {
+            if (seg[2] === other[j][4][2]) continue;
             if (matchSegment(seg, other[j][4], threshold, segments)) {
-                overlap = true;
-                break;
-            }
-        }
-
-        // if segment didn't match any other segments, add it to the diff
-        if (!overlap) {
-            // join segment with previous one if possible
-            if (last && last[last.length - 1] === seg[0]) {
-                last.push(seg[1]);
-
-            } else {
-                last = seg;
-                diff.push(seg);
+                matches.push(other[j][4][2]);
             }
         }
     }
 
-    return diff;
+    return matches;
 }
 
-function indexLines(lines) {
-    var segments = linesToSegments(lines),
+function indexFeatures(features) {
+    var segments = featuresToSegments(features),
         bboxes = [];
-
     for (var i = 0; i < segments.length; i++) {
         bboxes.push(segmentBBox(segments[i], 0));
     }
@@ -63,16 +62,18 @@ function segmentBBox(seg, r) {
     ];
 }
 
-function linesToSegments(lines) {
+function featuresToSegments(features) {
     var segments = [];
-
-    for (var i = 0; i < lines.length; i++) {
-        for (var j = lines[i].length - 1; j > 0; j--) {
-            var a = lines[i][j - 1],
-                b = lines[i][j];
-            if (a[0] !== b[0] || a[1] !== b[1]) segments.push([a, b]);
-        }
+    for (var i = 0; i < features.length; i++) {
+        featureToSegments(features[i], segments);
     }
-
     return segments;
+}
+
+function featureToSegments(feature, segments) {
+    for (var j = feature.geometry.coordinates.length - 1; j > 0; j--) {
+        var a = feature.geometry.coordinates[j - 1],
+        b = feature.geometry.coordinates[j];
+        if (a[0] !== b[0] || a[1] !== b[1]) segments.push([a, b, feature._id]);
+    }
 }

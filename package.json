@@ -1,14 +1,13 @@
 {
-  "name": "linematch",
-  "version": "1.0.3",
-  "description": "A fast algorithm for comparing sets of polylines (e.g. road networks).",
+  "name": "networkmatch",
+  "version": "1.0.0",
+  "description": "Find matching lines within a set of linestrings. Cribbed from mapbox/linematch.",
   "main": "index.js",
   "dependencies": {
     "rbush": "^1.4.0"
   },
   "devDependencies": {
     "eslint": "^1.5.1",
-    "eslint-config-mourner": "^1.0.0",
     "tap": "^1.4.0"
   },
   "scripts": {
@@ -17,23 +16,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mapbox/linematch.git"
+    "url": "git+https://github.com/dereklieu/networkmatch.git"
   },
-  "keywords": [
-    "algorithm",
-    "line",
-    "geometry",
-    "match",
-    "geo",
-    "difference"
-  ],
-  "eslintConfig": {
-    "extends": "mourner"
-  },
-  "author": "Vladimir Agafonkin",
+  "author": "Derek Lieu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mapbox/linematch/issues"
-  },
-  "homepage": "https://github.com/mapbox/linematch#readme"
+    "url": "https://github.com/dereklieu/networkmatch/issues"
+  }
 }
