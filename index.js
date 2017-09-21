@@ -22,17 +22,20 @@ function match(feature, threshold) {
     }
 
     var segments = [],
-        matches = [];
+        matches = [],
+        matched = {};
 
     featureToSegments(feature, segments);
+    matched[feature._id] = true;
 
     while (segments.length) {
         var seg = segments.pop();
         var other = tree.search(segmentBBox(seg, threshold));
 
         for (var j = 0; j < other.length; j++) {
-            if (seg[2] === other[j][4][2]) continue;
-            if (matchSegment(seg, other[j][4], threshold, segments)) {
+            if (matched[other[j][4][2]]) continue;
+            else if (matchSegment(seg, other[j][4], threshold, segments)) {
+                matched[other[j][4][2]] = true;
                 matches.push(other[j][4]);
             }
         }

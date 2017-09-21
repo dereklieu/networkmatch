@@ -47,7 +47,6 @@ test('partial matches', function (t) {
     var matches = lib.match(network.features[0], 0.0001);
     t.deepEqual(matches, [
         [[0, 0], [0, 20], 2],
-        [[0, 0], [0, 80], 3],
         [[0, 0], [0, 80], 3]
     ])
     t.end();
