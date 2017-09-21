@@ -33,7 +33,7 @@ function match(feature, threshold) {
         for (var j = 0; j < other.length; j++) {
             if (seg[2] === other[j][4][2]) continue;
             if (matchSegment(seg, other[j][4], threshold, segments)) {
-                matches.push(other[j][4][2]);
+                matches.push(other[j][4]);
             }
         }
     }

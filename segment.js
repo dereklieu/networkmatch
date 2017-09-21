@@ -9,12 +9,12 @@ function matchSegment(seg1, seg2, r, result) {
         b = seg1[1],
         c = seg2[0],
         d = seg2[1],
+        id = seg1[2],
         len = result.length;
 
     var ap = closePoint(a, c, d, r),
         bp = closePoint(b, c, d, r);
 
-        console.log(ap, bp);
     //     a----b
     // c---ap---bp---d
     if (ap !== null && bp !== null) return true; // fully covered
@@ -33,14 +33,14 @@ function matchSegment(seg1, seg2, r, result) {
         // a---cp---dp---b
         //     c----d
         if (cp < dp) {
-            if (!equals(a, cpp)) result.push([a, cpp]);
-            if (!equals(dpp, b)) result.push([dpp, b]);
+            if (!equals(a, cpp)) result.push([a, cpp, id]);
+            if (!equals(dpp, b)) result.push([dpp, b, id]);
 
         // a---dp---cp---b
         //     d----c
         } else {
-            if (!equals(a, dpp)) result.push([a, dpp]);
-            if (!equals(cpp, b)) result.push([cpp, b]);
+            if (!equals(a, dpp)) result.push([a, dpp, id]);
+            if (!equals(cpp, b)) result.push([cpp, b, id]);
         }
 
     } else if (cp !== null) {
@@ -48,22 +48,22 @@ function matchSegment(seg1, seg2, r, result) {
 
         //     a----cp---b
         // d---ap---c
-        if (ap !== null && !equals(a, cpp)) result.push([cpp, b]);
+        if (ap !== null && !equals(a, cpp)) result.push([cpp, b, id]);
 
         // a---cp---b
         //     c----bp---d
-        else if (bp !== null && !equals(cpp, b)) result.push([a, cpp]);
+        else if (bp !== null && !equals(cpp, b)) result.push([a, cpp, id]);
 
     } else if (dp !== null) {
         var dpp = segPoint(a, b, dp);
 
         // a---dp---b
         //     d----bp---c
-        if (bp !== null && !equals(dpp, b)) result.push([a, dpp]);
+        if (bp !== null && !equals(dpp, b)) result.push([a, dpp, id]);
 
         //     a----dp---b
         // c---ap---d
-        else if (ap !== null && !equals(a, dpp)) result.push([dpp, b]);
+        else if (ap !== null && !equals(a, dpp)) result.push([dpp, b, id]);
     }
 
     return result.length !== len; // segment processed

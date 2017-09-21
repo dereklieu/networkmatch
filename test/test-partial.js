@@ -1,6 +1,6 @@
 'use strict';
 var test = require('tap').test;
-var lib  = require('../');
+var lib = require('../');
 
 var network = {
     type: 'FeatureCollection',
@@ -11,8 +11,8 @@ var network = {
             geometry: {
                 type: 'LineString',
                 coordinates: [
-                    [1, 2],
-                    [1, 100]
+                    [0, 0],
+                    [0, 100]
                 ]
             }
         },
@@ -22,17 +22,33 @@ var network = {
             geometry: {
                 type: 'LineString',
                 coordinates: [
-                    [1, 2],
-                    [1, 100]
+                    [0, 0],
+                    [0, 20]
+                ]
+            }
+        },
+        {
+            type: 'Feature',
+            _id: 3,
+            geometry: {
+                type: 'LineString',
+                coordinates: [
+                    [0, 0],
+                    [0, 80],
+                    [40, 80]
                 ]
             }
         }
     ]
 };
 
-test('complete match', function (t) {
+test('partial matches', function (t) {
     lib.index(network);
     var matches = lib.match(network.features[0], 0.0001);
-    t.deepEqual(matches, [[[1, 2], [1, 100], 2]]);
+    t.deepEqual(matches, [
+        [[0, 0], [0, 20], 2],
+        [[0, 0], [0, 80], 3],
+        [[0, 0], [0, 80], 3]
+    ])
     t.end();
 });
